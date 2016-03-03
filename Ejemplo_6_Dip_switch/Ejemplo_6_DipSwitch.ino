@@ -5,15 +5,14 @@
  Tienda Virtual: http://tiendavirtual-tdb.com/
  Irapuato, Gto. 21 de febrero de 2016,  Tecnología Digital del Bajío
  */
-  
-#define DELAY 500 //** Retardo de 500 mSeg
+
+/** Define las variables para los 4 interruptores, se conectan a los pueros análogicos **/  
 #define SW1 A0
 #define SW2 A1
 #define SW3 A2
 #define SW4 A3
 
-
-int pin[]={2,3,4,5,6,7,8,9}; // se declara este arreglo, para el acceso a cada PIN que se va a usar.
+int pin[]={2,3,4,5,6,7,8,9}; // se declara este arreglo, para el acceso a cada PIN que se va a usar con el display de 7 segmentos.
 
 // the setup function runs once when you press reset or power the board
 int i,j;                  
@@ -28,15 +27,15 @@ byte Display7Seg[10][7] = { { 0,0,0,0,0,0,1 }, // Número 0 en 7 segmentos
                            { 0,0,0,1,1,1,1 },  // #7                                 
                            { 0,0,0,0,0,0,0 },  // #8
                            { 0,0,0,0,1,0,0 },  // #9                           
-                        };
- 
+                        }; 
 void setup() {
    
   for(i=0;i<8;i++){ //Ciclo para configurar cada uno de los PINES como de Salida.
      pinMode(pin[i],OUTPUT);
   }
-  pinMode(SW1, INPUT); pinMode(SW2, INPUT), pinMode(SW3, INPUT); pinMode(SW4, INPUT);
+  pinMode(SW1, INPUT); pinMode(SW2, INPUT), pinMode(SW3, INPUT); pinMode(SW4, INPUT); /** Declara las variables para los switch como entradas **/
 }
+/** Función que recibe un digito del 0 al 9 y envía los códigos necesarios para mostarlo en un display **/
 void MostrarEnDisplay(int Digito) {
     for (j=0;j<8;j++){
      digitalWrite(pin[j], Display7Seg[Digito][j]);       
@@ -45,10 +44,10 @@ void MostrarEnDisplay(int Digito) {
 // the loop function runs over and over again forever
 void loop() {
   int x, valor1, valor2, valor3, valor4, valorHEX;
-  valor1 = digitalRead(SW1);
-  valor2 = digitalRead(SW2); valor3 = digitalRead(SW3);  valor4 = digitalRead(SW4);
-  valorHEX = 0x0F & ((valor4 << 3) | (valor3 << 2) | (valor2 << 1) | valor1);  
-  switch(valorHEX) {
+  valor1 = digitalRead(SW1); valor2 = digitalRead(SW2); /** Instrucción para leer el estado de cada interruptor y lo almacena en 4 variables **/
+  valor3 = digitalRead(SW3); valor4 = digitalRead(SW4);
+  valorHEX = 0x0F & ((valor4 << 3) | (valor3 << 2) | (valor2 << 1) | valor1);  /*** Operaciones lógicas para "juntar" el estado de los 4 interruptores en una sola variable ****/
+  switch(valorHEX) {  /** Switch para decodificar el valor de los interruptores ***/
     case 0x00:MostrarEnDisplay(0); break;
     case 0x01:MostrarEnDisplay(1); break;
     case 0x02:MostrarEnDisplay(2); break;
